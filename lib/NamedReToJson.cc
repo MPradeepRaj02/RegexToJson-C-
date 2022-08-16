@@ -26,7 +26,7 @@ string NamedReToJson::parser(string rePattern,smatch data) {
     for (int i = 0; i <= strlen(Pattern); i++) {
         if (Pattern[i] == '<') {
             i++;
-            for (int j = i, k = 0;; j++, k++) {
+            for (int j = i, k = 0 ;; j++, k++) {
                 if (Pattern[j] == '>') {
                     i = j; l++;
                     name += ",";
@@ -37,18 +37,20 @@ string NamedReToJson::parser(string rePattern,smatch data) {
         }
         else continue;
     }
-    // String to List
+    // String to Json Parsing
     stringstream line(name);
-    string str; string names[20]; int i = 0;
+    string str; int i = 1;
+
+    json += "{";
     while (getline(line, str, ',')) {
-        names[i] = str; i++;
+        if (i == l) {
+            json += "\"" + str + "\":\"" + data[str] + "\"}";
+        }
+        else {
+            json += "\"" + str + "\":\"" + data[str] + "\", ";
+        }i++;
     }
-    //Json Parsing
-    json += "{"; int n = l - 1;
-    for (int i = 0; i < n; i++) {
-        json += "\"" + names[i] + "\":\"" + data[names[i]] + "\", ";
-    }
-    json += "\"" + names[n] + "\":\"" + data[names[n]] + "\"}";
+
 
     return json;
 }
